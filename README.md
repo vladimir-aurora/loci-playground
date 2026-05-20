@@ -13,11 +13,6 @@ analyze.
 | printf    | github.com/eyalroz/printf             | 1 .c           | Huge switch — control-flow + format-cost |
 | cJSON    | github.com/DaveGamble/cJSON           | 1 .c           | Recursive-descent parser → stack depth |
 
-> CMSIS-DSP was on the original shortlist but swapped for cJSON. Reasons:
-> CMSIS-DSP clones at ~200 MB, depends on CMSIS_5 core headers, and its
-> CMake expects specific include layouts — none of that is "seamless for
-> colleagues." Add it back later if you want the SIMD32 demo.
-
 ## Prerequisites
 
 | Tool          | Version checked | Notes |
@@ -70,8 +65,8 @@ loci-test-projects/
 └── cjson/     ...
 ```
 
-Each `CMakeLists.txt` is intentionally tiny — colleagues should be able
-to read all 5 wrappers in under a minute.
+Each `CMakeLists.txt` is intentionally tiny — all five wrappers can be
+read end-to-end in under a minute.
 
 ## Build flags
 
@@ -116,13 +111,11 @@ git add micro-ecc/upstream
 git commit -m "bump micro-ecc to <ref>"
 ```
 
-## Rolling out to a colleague
-
-Send them this one line:
+## One-liner
 
 ```bash
 git clone --recurse-submodules git@github.com:vladimir-aurora/loci-test-projects.git && cd loci-test-projects && ./build.sh
 ```
 
-Prereqs (TI Arm Clang + Ninja + CMake) are the only manual installs;
-everything else is automatic.
+TI Arm Clang, Ninja, and CMake are the only manual installs; everything
+else is automatic.
