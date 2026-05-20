@@ -299,10 +299,10 @@ crashed" is useful.
    - sanitized copies of the relevant config files, with secrets
      redacted in-memory before writing.
 
-2. **Open an issue** at
-   https://github.com/auroralabs-loci/loci-claude-dev/issues. All
-   testing-round feedback and bug reports go there, regardless of which
-   skill misbehaved.
+2. **File an issue** in the Aurora Labs Jira project at
+   https://auroralabs.atlassian.net/browse/AAD. All testing-round
+   feedback and bug reports go there, regardless of which skill
+   misbehaved.
 
 3. **Attach the report file** and briefly describe:
    - what you typed and what you expected,
@@ -314,9 +314,10 @@ or diagnose; you don't need to chase down logs by hand.
 ### When this *testbed* itself has a problem
 
 If the issue is with this repo — the build script broke, the README is
-unclear, a project failed to compile — open an issue against this
-repository instead. No `/bug-report` needed for that; it's a LOCI
-diagnostic and won't tell us much about a CMake error.
+unclear, a project failed to compile — open an issue on GitHub at
+https://github.com/auroralabs-loci/loci-claude-dev/issues instead. No
+`/bug-report` needed for that; it's a LOCI diagnostic and won't tell
+us much about a CMake error.
 
 ### Feedback that isn't a bug
 
