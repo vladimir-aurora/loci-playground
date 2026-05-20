@@ -1,4 +1,4 @@
-# LOCI test projects — Cortex-M4F testbed
+# LOCI playground — Cortex-M4F testbed
 
 A small, pre-wired set of open-source firmware projects you can build in
 about five minutes and use to drive every feature of the **LOCI** Claude
@@ -138,8 +138,8 @@ listed.
 ## Clone and build
 
 ```bash
-git clone --recurse-submodules https://github.com/vladimir-aurora/loci-test-projects.git
-cd loci-test-projects
+git clone --recurse-submodules https://github.com/vladimir-aurora/loci-playground.git
+cd loci-playground
 ./build.sh
 ```
 
@@ -159,7 +159,7 @@ submodules, then `./build.sh`.
 
 ### How LOCI uses this build
 
-Start Claude Code from the **repo root** (`loci-test-projects/`). LOCI
+Start Claude Code from the **repo root** (`loci-playground/`). LOCI
 auto-detects the project on session start by reading
 `.loci-build/compile_commands.json` and inspecting the cross-compiled
 artifacts.
@@ -346,7 +346,7 @@ what we want to hear. File it the same way; you don't need a
 ## Repo layout
 
 ```
-loci-test-projects/
+loci-playground/
 ├── CMakeLists.txt                       # top-level — adds all subprojects
 ├── toolchain/
 │   └── cortex-m4-tiarmclang.cmake       # cross-compile toolchain file
@@ -400,8 +400,8 @@ git commit -m "bump micro-ecc to <ref>"
 ## One-liner
 
 ```bash
-git clone --recurse-submodules https://github.com/vladimir-aurora/loci-test-projects.git \
-  && cd loci-test-projects && ./build.sh
+git clone --recurse-submodules https://github.com/vladimir-aurora/loci-playground.git \
+  && cd loci-playground && ./build.sh
 ```
 
 Then start Claude Code in the repo root, install the plugin if you

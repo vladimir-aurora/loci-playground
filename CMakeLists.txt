@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(loci-test-projects C)
+project(loci-playground C)
 
 # These projects only ever build as object libraries / static archives for
 # Cortex-M4 analysis. No executables, no linker, no host fallback.
@@ -19,7 +19,7 @@ if(NOT CMAKE_CROSSCOMPILING)
         "  cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=toolchain/cortex-m4-tiarmclang.cmake")
 endif()
 
-message(STATUS "LOCI test projects — target: ${CMAKE_SYSTEM_PROCESSOR}, compiler: ${CMAKE_C_COMPILER}")
+message(STATUS "LOCI playground — target: ${CMAKE_SYSTEM_PROCESSOR}, compiler: ${CMAKE_C_COMPILER}")
 
 add_subdirectory(micro-ecc)
 add_subdirectory(littlefs)
