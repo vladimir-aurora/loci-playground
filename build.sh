@@ -76,7 +76,7 @@ cmake --build "$BUILD_DIR"
 
 echo
 echo "Build complete. Artifacts:"
-find "$BUILD_DIR" \( -name '*.a' -o -name '*.lib' \) -not -path '*/CompilerIdC/*' \
+find "$BUILD_DIR" \( -name '*.a' -o -name '*.lib' -o -name '*.elf' \) -not -path '*/CompilerIdC/*' \
     | sort \
     | while read -r f; do
         sz=$(wc -c < "$f")
