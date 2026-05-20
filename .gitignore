@@ -1,5 +1,5 @@
-# Upstream clones — recreated by setup.ps1
-*/upstream/
+# NB: Upstream sources live under <project>/upstream/ as git submodules
+# (see .gitmodules) — do NOT ignore those paths, they're tracked by git.
 
 # CMake build output (any name starting with .loci-build or build)
 .loci-build/

@@ -1,0 +1,9 @@
+# Default: let git auto-detect text vs binary and normalize line endings.
+* text=auto
+
+# Shell scripts MUST be LF — CRLF breaks the shebang on Linux/macOS.
+*.sh text eol=lf
+
+# CMake input is line-ending-tolerant but keep it consistent.
+*.cmake text eol=lf
+CMakeLists.txt text eol=lf

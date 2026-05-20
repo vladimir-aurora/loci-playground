@@ -11,7 +11,7 @@ analyze.
 | littlefs  | github.com/littlefs-project/littlefs  | 2 .c           | Recursive directory walk → stack depth |
 | tinycrypt | github.com/intel/tinycrypt            | 15 .c          | Many small algorithms side by side |
 | printf    | github.com/eyalroz/printf             | 1 .c           | Huge switch — control-flow + format-cost |
-| cJSON     | github.com/DaveGamble/cJSON           | 1 .c           | Recursive-descent parser → stack depth |
+| cJSON    | github.com/DaveGamble/cJSON           | 1 .c           | Recursive-descent parser → stack depth |
 
 > CMSIS-DSP was on the original shortlist but swapped for cJSON. Reasons:
 > CMSIS-DSP clones at ~200 MB, depends on CMSIS_5 core headers, and its
@@ -22,38 +22,48 @@ analyze.
 
 | Tool          | Version checked | Notes |
 |---------------|-----------------|-------|
-| TI Arm Clang  | 2.1.3 LTS       | Expected at `C:\ti\ticlang`. Override with `$env:TIARMCLANG_DIR`. |
+| TI Arm Clang  | 2.1.3 LTS       | Defaults: `C:\ti\ticlang` (Win), `/opt/ti/ticlang` (Linux). Override via `$TIARMCLANG_DIR`. macOS is unsupported by TI — see below. |
 | CMake         | >= 3.16         | 4.x is fine. |
-| Ninja         | any             | Bundled with most IDEs / `choco install ninja`. |
-| Git           | any             | For `setup.ps1`. |
-| PowerShell    | 7+ preferred    | Scripts use `pwsh`. |
+| Ninja         | any             | `choco install ninja` / `apt install ninja-build` / `brew install ninja`. |
+| Git           | any             | With submodule support (every modern version). |
+| Bash          | any             | Git Bash on Windows; native bash on Linux/macOS. |
 
 No Cortex-M startup files, linker scripts, or libc are required — every
 project builds to a static archive only. LOCI reads the object files.
 
-## One-time setup (per machine)
+**macOS note:** TI does not ship Arm Clang for macOS. If you're on a Mac,
+either build inside a Linux VM/container, or set `TIARMCLANG_DIR` to a
+locally-sourced install. The build scripts will exit with a clear error
+otherwise.
 
-```powershell
-cd C:\Playground\loci-test-projects
-pwsh -File setup.ps1     # clones the five upstream repos shallow
-pwsh -File build.ps1     # configures + builds all five
+## One-time setup
+
+```bash
+git clone --recurse-submodules git@github.com:vladimir-aurora/loci-test-projects.git
+cd loci-test-projects
+./build.sh
 ```
 
-Re-running either script is idempotent. `build.ps1 -Clean` wipes the
-build directory first.
+If you already cloned without `--recurse-submodules`, run `./setup.sh`
+first to fetch the upstream submodules.
+
+`./build.sh --clean` wipes the build directory first. Custom toolchain
+location: `TIARMCLANG_DIR=/path/to/ticlang ./build.sh`.
 
 ## Layout
 
 ```
 loci-test-projects/
+├── .gitmodules                          # 5 upstream pins (HTTPS)
+├── .gitattributes                       # forces LF on shell scripts
 ├── CMakeLists.txt                       # top-level, adds all 5 subdirs
 ├── toolchain/
-│   └── cortex-m4-tiarmclang.cmake       # the only toolchain file
-├── setup.ps1                            # clones upstreams
-├── build.ps1                            # cmake configure + build
+│   └── cortex-m4-tiarmclang.cmake       # cross-platform toolchain file
+├── setup.sh                             # `git submodule update --init`
+├── build.sh                             # configure + build all 5
 ├── micro-ecc/
 │   ├── CMakeLists.txt                   # wrapper — compiles uECC.c
-│   └── upstream/                        # git clone
+│   └── upstream/                        # submodule
 ├── littlefs/  ...
 ├── tinycrypt/ ...
 ├── printf/    ...
@@ -77,7 +87,7 @@ tries to link a Cortex-M4 executable on the host.
 
 ## Suggested LOCI runs
 
-Once `build.ps1` succeeds, the .o files live under `.loci-build/`. Ask
+Once `./build.sh` succeeds, the .o files live under `.loci-build/`. Ask
 Claude things like:
 
 - `/exec-trace uECC_sign`              — full ECDSA sign timing
@@ -90,20 +100,29 @@ Claude things like:
 
 ## Adding another project
 
-1. Append the clone to the `$repos` list in `setup.ps1`.
+1. `git submodule add <url> <name>/upstream`
 2. Create `<name>/CMakeLists.txt` with a single `add_library(<name> STATIC ...)`.
 3. Add `add_subdirectory(<name>)` to the top-level `CMakeLists.txt`.
 
 That's it — no other glue.
 
-## Rolling out to a colleague
+## Updating an upstream pin
 
-```powershell
-git clone <this-repo> C:\Playground\loci-test-projects
-cd C:\Playground\loci-test-projects
-pwsh -File setup.ps1
-pwsh -File build.ps1
+```bash
+cd micro-ecc/upstream
+git fetch && git checkout <new-sha-or-tag>
+cd ../..
+git add micro-ecc/upstream
+git commit -m "bump micro-ecc to <ref>"
 ```
 
-Prerequisite installs (Ninja + TI Arm Clang) are the only manual steps;
-everything else is scripted.
+## Rolling out to a colleague
+
+Send them this one line:
+
+```bash
+git clone --recurse-submodules git@github.com:vladimir-aurora/loci-test-projects.git && cd loci-test-projects && ./build.sh
+```
+
+Prereqs (TI Arm Clang + Ninja + CMake) are the only manual installs;
+everything else is automatic.

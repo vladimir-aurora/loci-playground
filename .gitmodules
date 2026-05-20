@@ -1,0 +1,15 @@
+[submodule "micro-ecc/upstream"]
+	path = micro-ecc/upstream
+	url = https://github.com/kmackay/micro-ecc.git
+[submodule "littlefs/upstream"]
+	path = littlefs/upstream
+	url = https://github.com/littlefs-project/littlefs.git
+[submodule "tinycrypt/upstream"]
+	path = tinycrypt/upstream
+	url = https://github.com/intel/tinycrypt.git
+[submodule "printf/upstream"]
+	path = printf/upstream
+	url = https://github.com/eyalroz/printf.git
+[submodule "cjson/upstream"]
+	path = cjson/upstream
+	url = https://github.com/DaveGamble/cJSON.git
