@@ -68,9 +68,13 @@ if [ "$CLEAN" -eq 1 ] && [ -d "$BUILD_DIR" ]; then
     rm -rf "$BUILD_DIR"
 fi
 
-cmake -B "$BUILD_DIR" -G Ninja \
-    -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
-    -DTIARMCLANG_DIR="$TIARMCLANG_DIR"
+# Only pass -DCMAKE_TOOLCHAIN_FILE on the initial configure; CMake caches it
+# in CMakeCache.txt and warns about unused variables on subsequent runs.
+if [ ! -f "$BUILD_DIR/CMakeCache.txt" ]; then
+    cmake -B "$BUILD_DIR" -G Ninja \
+        -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
+        -DTIARMCLANG_DIR="$TIARMCLANG_DIR"
+fi
 
 cmake --build "$BUILD_DIR"
 
