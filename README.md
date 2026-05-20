@@ -53,6 +53,10 @@ Plus two skills that fire automatically, no slash command needed:
   timing / energy / CFG delta so you see the impact of the change
   immediately.
 
+For deeper documentation on LOCI itself — skills, configuration, the
+analysis model — see **https://docs.loci-dev.net/**. This README only
+covers what you need to drive the testbed.
+
 ---
 
 ## What's in this repo
