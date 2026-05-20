@@ -1,0 +1,28 @@
+# Upstream clones — recreated by setup.ps1
+*/upstream/
+
+# CMake build output (any name starting with .loci-build or build)
+.loci-build/
+build/
+build-*/
+cmake-build-*/
+
+# CMake / Ninja artifacts that can leak into the source tree
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+*.o
+*.obj
+*.a
+*.lib
+*.elf
+
+# IDE / editor
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*~
+.DS_Store
+Thumbs.db
