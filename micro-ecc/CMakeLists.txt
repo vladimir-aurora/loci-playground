@@ -13,7 +13,7 @@ target_include_directories(micro_ecc PUBLIC upstream)
 
 target_compile_definitions(micro_ecc PRIVATE
     uECC_PLATFORM=5             # uECC_arm_thumb2
-    uECC_OPTIMIZATION_LEVEL=3
+    uECC_OPTIMIZATION_LEVEL=1   # >=2 pulls in vli_sub thumb2 asm that exhausts the regalloc under -O2
     uECC_SUPPORTS_secp256r1=1
     uECC_SUPPORTS_secp192r1=0
     uECC_SUPPORTS_secp224r1=0
