@@ -36,10 +36,10 @@ Concretely, LOCI ships seven skills:
 |-------|--------------|
 | `/loci:exec-trace`    | Instruction-level worst-path / happy-path timing and energy per call. |
 | `/loci:stack-depth`   | Worst-case stack budget — walks the call graph, sums the frames. |
-| `/loci:memory-report` | ROM / RAM section breakdown and top consumers from a linked ELF. |
+| `/memory-report` | ROM / RAM section breakdown and top consumers from a linked ELF. |
 | `/loci:control-flow`  | Annotated control-flow graph (CFG) in a text format LLMs can reason over. |
-| `/loci:trends`        | Per-function history of timing / energy / stack / memory across edits. |
-| `/loci:bug-report`    | Forensic diagnostic for when LOCI itself misbehaves. |
+| `/trends`        | Per-function history of timing / energy / stack / memory across edits. |
+| `/bug-report`    | Forensic diagnostic for when LOCI itself misbehaves. |
 | `/loci:help`          | Quick reference for everything above. |
 
 Plus two skills that fire automatically, no slash command needed:
@@ -72,7 +72,7 @@ Each project was picked because it stresses a different LOCI feature:
 | tinycrypt | github.com/intel/tinycrypt            | Many small algorithms — pick AES, SHA-256, HMAC, or CTR-PRNG for `/loci:exec-trace`. |
 | printf    | github.com/eyalroz/printf             | Giant format-specifier switch → `/loci:control-flow`. |
 | cJSON     | github.com/DaveGamble/cJSON           | Recursive-descent parser → `/loci:stack-depth` on adversarial JSON. |
-| demo      | (this repo)                           | A tiny `main.c` that pulls one symbol from each library into a real Cortex-M4 ELF — that's what `/loci:memory-report` analyzes. |
+| demo      | (this repo)                           | A tiny `main.c` that pulls one symbol from each library into a real Cortex-M4 ELF — that's what `/memory-report` analyzes. |
 
 You don't need to understand any of these libraries to use the testbed.
 The skill examples below give you exact function names to copy-paste.
@@ -134,7 +134,7 @@ doesn't appear, type `/mcp` to bring up the server list manually.
 
 Confirm LOCI is live by typing `/loci:help` in Claude Code. You should see
 the LOCI quick-reference, with `/loci:exec-trace`, `/loci:stack-depth`,
-`/loci:memory-report`, `/loci:control-flow`, `/loci:trends`, and `/loci:bug-report` all
+`/memory-report`, `/loci:control-flow`, `/trends`, and `/bug-report` all
 listed.
 
 ---
@@ -209,7 +209,7 @@ Indispensable when you're sizing an RTOS task or chasing a hard-fault.
 /loci:stack-depth uECC_sign          # bounded but deep call chain
 ```
 
-### `/loci:memory-report` — ROM / RAM breakdown
+### `/memory-report` — ROM / RAM breakdown
 
 Needs a linked ELF, which is exactly why the `demo/` project exists.
 It pulls one symbol from each library plus TI's standard runtime, so
@@ -217,7 +217,7 @@ the report you get back reflects a realistic Cortex-M4 image (~25 KB
 of library code, ~213 KB total ELF):
 
 ```text
-/loci:memory-report                  # analyzes .loci-build/demo/demo.elf
+/memory-report                  # analyzes .loci-build/demo/demo.elf
 ```
 
 ### `/loci:control-flow <function>` — annotated CFG
@@ -232,7 +232,7 @@ read the assembly by hand:
 /loci:control-flow lfs_dir_fetchmatch  # directory-entry matching
 ```
 
-### `/loci:trends` — per-function history
+### `/trends` — per-function history
 
 Shows how a function's timing, energy, stack, or memory has moved over
 recent edits on the current branch. To populate it, run an
@@ -240,8 +240,8 @@ recent edits on the current branch. To populate it, run an
 LOCI line up the before-and-after.
 
 ```text
-/loci:trends                          # everything measured on this branch
-/loci:trends uECC_sign                # one function's trajectory
+/trends                          # everything measured on this branch
+/trends uECC_sign                # one function's trajectory
 ```
 
 ### Auto-firing: preflight and post-edit
@@ -274,13 +274,13 @@ pre-edit baseline yet, so you'll get a "first measurement" record
 instead of a `%`-diff. Make a second edit and you'll see the
 comparison.
 
-### `/loci:bug-report` — diagnostic
+### `/bug-report` — diagnostic
 
 When LOCI itself misbehaves, run this. Full reporting flow in the
 next section.
 
 ```text
-/loci:bug-report
+/bug-report
 ```
 
 ---
@@ -293,7 +293,7 @@ crashed" is useful.
 
 ### When something goes wrong with LOCI
 
-1. **Run `/loci:bug-report` inside Claude Code.** It writes a timestamped
+1. **Run `/bug-report` inside Claude Code.** It writes a timestamped
    file like `report-2026-05-20-windows.md` in your current directory.
    The report includes:
    - your Claude Code, LOCI plugin, and OS versions;
@@ -320,7 +320,7 @@ or diagnose; you don't need to chase down logs by hand.
 If the issue is with this repo — the build script broke, the README is
 unclear, a project failed to compile — open an issue on GitHub at
 https://github.com/auroralabs-loci/loci-claude-dev/issues instead. No
-`/loci:bug-report` needed for that; it's a LOCI diagnostic and won't tell
+`/bug-report` needed for that; it's a LOCI diagnostic and won't tell
 us much about a CMake error.
 
 ### Feedback that isn't a bug
@@ -328,7 +328,7 @@ us much about a CMake error.
 Confusion is feedback. "I didn't know what this skill was for," "the
 output overwhelmed me," "I wished it did X" — all of that is exactly
 what we want to hear. File it the same way; you don't need a
-`/loci:bug-report` attached for non-bug feedback.
+`/bug-report` attached for non-bug feedback.
 
 ---
 
@@ -341,10 +341,10 @@ what we want to hear. File it the same way; you don't need a
 | `/loci:help` doesn't show LOCI in Claude Code | Run `/plugin marketplace add auroralabs-loci/loci-claude-dev` and `/plugin install loci@loci`. Restart Claude Code. |
 | First Claude Code session feels stuck for 30 seconds | That's the LOCI bootstrap building its venv. Let it finish — subsequent sessions are instant. |
 | Skill says "no compile_commands.json" | Run `./build.sh` first, then restart Claude Code from the repo root. |
-| `/loci:memory-report` says no ELF | Confirm `.loci-build/demo/demo.elf` exists. If not, run `./build.sh --clean`. |
+| `/memory-report` says no ELF | Confirm `.loci-build/demo/demo.elf` exists. If not, run `./build.sh --clean`. |
 | MCP server "not authorized" | Type `/mcp` in Claude Code, approve the **loci** server. If it doesn't appear in the list, restart Claude Code. |
 | `/loci:exec-trace` hangs or errors with a network message | Confirm your network reaches `mcp.auroralabs.com` over HTTPS. Corporate VPNs sometimes block it. |
-| Anything else | Run `/loci:bug-report` and file the report — see [Filing a bug or feedback](#filing-a-bug-or-feedback). |
+| Anything else | Run `/bug-report` and file the report — see [Filing a bug or feedback](#filing-a-bug-or-feedback). |
 
 ---
 
@@ -362,7 +362,7 @@ loci-playground/
 ├── tinycrypt/   CMakeLists.txt + upstream/
 ├── printf/      CMakeLists.txt + upstream/
 ├── cjson/       CMakeLists.txt + upstream/
-└── demo/        CMakeLists.txt + main.c    # → demo.elf for /loci:memory-report
+└── demo/        CMakeLists.txt + main.c    # → demo.elf for /memory-report
 ```
 
 Build flags from `toolchain/cortex-m4-tiarmclang.cmake`:
@@ -385,7 +385,7 @@ its compiler check.
 1. `git submodule add <url> <name>/upstream`
 2. Create `<name>/CMakeLists.txt` with a single `add_library(<name> STATIC ...)`.
 3. Add `add_subdirectory(<name>)` to the top-level `CMakeLists.txt`.
-4. *(Optional)* To represent the new library in `/loci:memory-report`, add
+4. *(Optional)* To represent the new library in `/memory-report`, add
    `extern` references to one or two of its symbols in `demo/main.c`
    and add the library to `demo/CMakeLists.txt`'s
    `target_link_libraries`.
